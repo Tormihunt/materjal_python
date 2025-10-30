@@ -1,6 +1,6 @@
 from mp_api.client import MPRester
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 #get data from Materials Project API
 mp_id_to_task_id = {}
