@@ -7,7 +7,8 @@ mp_id_to_task_id = {}
 with MPRester("HEKWFDp0sGOgT9GPRHDQGdPfhEyLnqRL") as mpr:
     summary_docs = mpr.materials.summary.search(material_ids=["mp-149", "mp-13", "mp-22526"],
                                                 fields = ["density", "band_gap", "formation_energy_per_atom", "volume"])
-    
+
+print(summary_docs)
 #converts to list and removes 'fields_not_requested'
 data = []
 for doc in summary_docs:
