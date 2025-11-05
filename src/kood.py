@@ -1,17 +1,28 @@
 from mp_api.client import MPRester
 import pandas as pd
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
 import numpy as np
+=======
+#import matplotlib.pyplot as plt
+>>>>>>> 4eb9e99affd98014a7f146459a72441f575f3f5a
 
 #get data from Materials Project API
 mp_id_to_task_id = {}
 with MPRester("HEKWFDp0sGOgT9GPRHDQGdPfhEyLnqRL") as mpr:
+<<<<<<< HEAD
     summary_docs = mpr.materials.summary.search(chunk_size=100,
                                                 fields = ["density", "nelements", "energy_per_atom", "universal_anisotropy", "band_gap"],
                                                 energy_above_hull=(0, 0.05),
                                                 band_gap=(3.0, 3.5))  # only stabile materials)
 
 #print(summary_docs)    
+=======
+    summary_docs = mpr.materials.summary.search(material_ids=["mp-149", "mp-13", "mp-22526"],
+                                                fields = ["density", "band_gap", "formation_energy_per_atom", "volume"])
+
+print(summary_docs)
+>>>>>>> 4eb9e99affd98014a7f146459a72441f575f3f5a
 #converts to list and removes 'fields_not_requested'
 data = []
 for doc in summary_docs:
