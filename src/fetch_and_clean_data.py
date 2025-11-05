@@ -1,28 +1,18 @@
 from mp_api.client import MPRester
 import pandas as pd
-<<<<<<< HEAD
 import matplotlib.pyplot as plt
 import numpy as np
-=======
-#import matplotlib.pyplot as plt
->>>>>>> 4eb9e99affd98014a7f146459a72441f575f3f5a
 
 #get data from Materials Project API
 mp_id_to_task_id = {}
 with MPRester("HEKWFDp0sGOgT9GPRHDQGdPfhEyLnqRL") as mpr:
-<<<<<<< HEAD
     summary_docs = mpr.materials.summary.search(chunk_size=100,
-                                                fields = ["density", "nelements", "energy_per_atom", "universal_anisotropy", "band_gap"],
-                                                energy_above_hull=(0, 0.05),
-                                                band_gap=(3.0, 3.5))  # only stabile materials)
+                                                fields = ["energy_above_hull", "formation_energy_per_atom", "nelements", "volume", "density", "density_atomic", "efermi", "total_magnetization", "nelements", "universal_anisotropy", "energy_per_atom", "band_gap"],
+                                                energy_above_hull=(-1, 1),
+                                                #band_gap=(3.0, 3.25))  # only stabile materials
+                                                )
 
 #print(summary_docs)    
-=======
-    summary_docs = mpr.materials.summary.search(material_ids=["mp-149", "mp-13", "mp-22526"],
-                                                fields = ["density", "band_gap", "formation_energy_per_atom", "volume"])
-
-print(summary_docs)
->>>>>>> 4eb9e99affd98014a7f146459a72441f575f3f5a
 #converts to list and removes 'fields_not_requested'
 data = []
 for doc in summary_docs:
@@ -51,6 +41,7 @@ dataFrame = pd.DataFrame(data)
 #removes empty rows, duplicates and anomalous materials
 dataFrame = dataFrame.dropna()
 dataFrame = dataFrame.drop_duplicates()
+
 dataFrame = dataFrame[(dataFrame['density'] > 0) & (dataFrame['density'] < 20)]
 dataFrame = dataFrame[(dataFrame['nelements'] > 0) & (dataFrame['nelements'] < 50)]
 dataFrame = dataFrame[(dataFrame['energy_per_atom'] < 0) & (dataFrame['energy_per_atom'] > -100)]
@@ -86,7 +77,7 @@ for feature in features:
             plt.figure()
             plt.scatter(x, y, alpha=0.5)
             plt.xlabel(feature)
-            plt.ylabel("band_gap (eV)")
+            plt.ylabel("energy_above_hull")
             plt.title(f"{feature} vs band_gap\nR² = {r2:.3f}")
             plt.tight_layout()
             plt.savefig(f"correlation_{feature}_vs_bandgap.png")
