@@ -1,28 +1,5 @@
-import joblib
-import pandas as pd
-from tkinter import *
 import csv
-
-#vajab veel tegemist
-
-def ennusta():
-    csv_loomine()
-    try:
-        a = list(map(float, sisendid_saama())) #Äkki tuleb mul hiljem parem mõte
-    except:
-        hoiatus = Label(m, text="Täida koik väljad numbritega!")
-        hoiatus.config(bg='red')
-        hoiatus.grid(row=9, column=0)
-        return
-    regressor = joblib.load("./data/band_gap_rf.joblib")
-    user_var = pd.read_csv("user_variables.csv")
-    standard_deviation = pd.read_csv("./data/standardised_deviation_data.csv").iloc[7, 0]
-    mean = pd.read_csv("./data/mean_data.csv").iloc[7, 0]
-    prediction = regressor.predict(user_var)
-    prediction = prediction * standard_deviation + mean
-    tulemus = Label(m, text=f'Tulemus: {prediction:.2f} ev', width=25, height=5)
-    tulemus.grid(row = 9, column = 0)
-    tulemus.config(bg='lightgreen')
+from tkinter import *
 
 def sisendid_saama():
     sisendid = [e1.get(), e2.get(), e3.get(), e4.get(), e5.get(), e6.get(), e7.get(), e8.get(), e9.get(), e10.get()]
@@ -37,6 +14,20 @@ def csv_loomine():
         #writer.writerow(tulbad)
         writer.writerow(rida)
     return
+
+def ennusta():
+    csv_loomine()
+    print(sisendid_saama())
+    try:
+        a = list(map(float, sisendid_saama()))
+    except:
+        hoiatus = Label(m, text="Taida koik valjad numbritega!")
+        hoiatus.config(bg='red')
+        hoiatus.grid(row=9, column=0)
+        return
+    tulemus = Label(m, text = f'Tulemus {sum(a)}', width=25, height=5)
+    tulemus.grid(row = 9, column = 0)
+    tulemus.config(bg='lightgreen')
 
 #Peaakna loomine
 
@@ -68,7 +59,7 @@ menuu.add_cascade(label="Valjumine", menu=exitmenu)
 exitmenu.add_command(label="Salvesta ja valju", command=m.quit)
 exitmenu.add_command(label='Valju salvestamata', command=m.quit)
 
-#Hiljem viin järgnevad plokid tsüklisse
+#Hiljem viin järgneva tsüklisse
 
 Label(m, text='nelements').grid(row=0, column=0, columnspan=2, rowspan=2)
 Label(m, text='volume').grid(row=0, column=3, columnspan=2, rowspan=2)
