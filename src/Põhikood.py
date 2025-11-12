@@ -1,26 +1,27 @@
+#
+
+
 import joblib
 import pandas as pd
 from tkinter import *
 import csv
 
-#vajab veel tegemist
-
 def ennusta():
-    csv_loomine()
     try:
-        a = list(map(float, sisendid_saama())) #Äkki tuleb mul hiljem parem mõte
+        a = list(map(float, sisendid_saama())) #Äkki tuleb mul hiljem parem mõte, kuidas sisendite olemasolu ja kõlblikkust kontrollida
     except:
-        hoiatus = Label(m, text="Täida koik väljad numbritega!")
+        hoiatus = Label(m, text="Täida kõik väljad numbritega!")
         hoiatus.config(bg='red')
         hoiatus.grid(row=9, column=0)
         return
-    regressor = joblib.load("./data/band_gap_rf.joblib")
+    csv_loomine()
+    regressor = joblib.load("band_gap_rf.joblib")
     user_var = pd.read_csv("user_variables.csv")
-    standard_deviation = pd.read_csv("./data/standardised_deviation_data.csv").iloc[7, 0]
-    mean = pd.read_csv("./data/mean_data.csv").iloc[7, 0]
+    standard_deviation = pd.read_csv("standardised_deviation_data.csv").iloc[7, 0]
+    mean = pd.read_csv("mean_data.csv").iloc[7, 0]
     prediction = regressor.predict(user_var)
     prediction = prediction * standard_deviation + mean
-    tulemus = Label(m, text=f'Tulemus: {prediction:.2f} ev', width=25, height=5)
+    tulemus = Label(m, text=f'Tulemus: {round(float(prediction), 2)} eV', width=25, height=5)
     tulemus.grid(row = 9, column = 0)
     tulemus.config(bg='lightgreen')
 
@@ -29,12 +30,12 @@ def sisendid_saama():
     return sisendid
 
 def csv_loomine():
-    rida = sisendid_saama()
-    #tulbad = ['nelements', 'volume', 'density', 'density_atomic', 'energy_per_atom', 'formation energy per atom', 'energy above hull',
-              #'efermi', 'total_magnetization', 'universal_anisotropy']
+    rida = list(map(int, sisendid_saama()))
+    tulbad = ['nelements', 'volume', 'density', 'density_atomic', 'energy_per_atom', 'formation_energy_per_atom', 'energy_above_hull',
+              'efermi', 'total_magnetization', 'universal_anisotropy']
     with open("user_variables.csv", "w", newline="") as csvfile:
         writer = csv.writer(csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL)
-        #writer.writerow(tulbad)
+        writer.writerow(tulbad)
         writer.writerow(rida)
     return
 
@@ -44,7 +45,7 @@ m = Tk()
 laius = m.winfo_screenwidth()
 korgus = m.winfo_screenheight()
 m.geometry("%dx%d" % (laius, korgus))
-m.title("Projekt")
+m.title("Keelutsooni ennustaja")
 
 #Nupu 'ennusta' loomine
 
@@ -60,13 +61,13 @@ filemenu = Menu(menuu)
 menuu.add_cascade(label="Salvesta", menu=filemenu)
 helpmenu = Menu(menuu)
 menuu.add_cascade(label="Abi", menu=helpmenu)
-helpmenu.add_command(label='Kuidas see tootab?', command=Toplevel)
+helpmenu.add_command(label='Kuidas see töötab?', command=Toplevel)
 helpmenu.add_command(label='Kuidas kasutada', command=Toplevel)
 
 exitmenu = Menu(menuu)
-menuu.add_cascade(label="Valjumine", menu=exitmenu)
-exitmenu.add_command(label="Salvesta ja valju", command=m.quit)
-exitmenu.add_command(label='Valju salvestamata', command=m.quit)
+menuu.add_cascade(label="Väljumine", menu=exitmenu)
+exitmenu.add_command(label="Salvesta ja välju", command=m.quit)
+exitmenu.add_command(label='Välju salvestamata', command=m.quit)
 
 #Hiljem viin järgnevad plokid tsüklisse
 
