@@ -1,5 +1,5 @@
-#
-
+#Programm "Keelutsooni ennustaja". Autorid Tormi Hunt ja Johannes Palmiste.
+#Programmi saab käivitada IDE-s "Run" nuppu vajutades
 
 import joblib
 import pandas as pd
