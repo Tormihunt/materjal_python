@@ -5,6 +5,7 @@ import joblib
 import pandas as pd
 from tkinter import *
 import csv
+import subprocess
 
 def ennusta():
     try:
@@ -20,9 +21,10 @@ def ennusta():
     prediction = regressor.predict(user_var)
     prediction = prediction * standard_deviation + mean
     prediction = float(prediction[0])
-    tulemus = Label(m, text=f'Tulemus: {round(float(prediction), 2)} eV', width=25, height=5)
-    tulemus.grid(row = 9, column = 0)
-    tulemus.config(bg='lightgreen')
+    tulemus = Label(m, text=f'Tulemus: {round(float(prediction), 2)} eV')
+    tulemus.grid(row = 7, column = 2, columnspan = 2)
+    tulemus.config(bg='lightgreen', font=("Arial", 20))
+    return prediction
 
 def sisendid_saama():
     return [s.get() for s in sisendid]
@@ -49,34 +51,56 @@ def tuhjenda():
     for s in sisendid:
         s.delete(0, END)
 
-def salvesta(f):
-    if f == "":
-        return 0
-    else:
-        with open(f) as vf:
-            i = 0
-            for sisend in sisendid:
-                vf.write(f"{sildid[i]} -- {sisend}")
-                i += 1
-        return True
-
-def salvestusaken():
+def universaalne_salvestusaken(sulge_m):
     uus = Toplevel(m)
+    v1 = IntVar()
     uus.title("Salvestamine")
     uus.geometry("400x300")
     uus.resizable(False, False)
-    nimi = Label(uus, text="Sisesta faili nimi laiendiga!")
+    for c in range(3):
+        uus.columnconfigure(c, weight=1)
+    Label(uus, text="Sisesta faili nimi laiendiga!", bg="orange", font=("Arial", 20)).grid(row=0, column=1)
+    sisend = Entry(uus, font=("Arial", 20))
+    sisend.grid(row=1, column=1)
+    Button(uus, text="Salvesta", font=("Arial", 20), command=lambda: salvesta_fail(sisend.get(), v1, uus, sulge_m)).grid(row=2, column=1)
+    Checkbutton(uus, text="Ava peale salvestamist", variable=v1, onvalue=1, offvalue=0).grid(row=3, column=1)
+
+
+def salvesta_fail(fail, v1, aken, sulge_m):
+    try:
+        with open(fail, "w", encoding="UTF-8") as vf:
+            vf.write(f"--Ennustatud keelutsooni laius: {round(ennusta(), 2)}--\n")
+
+            for i, sis in enumerate(sisendid):
+                vf.write(f"{sildid[i].strip()} -- {sis.get()}\n")
+    except:
+        with open(fail, "w", encoding="UTF-8") as vf:
+            vf.write("Tühjus")
+    if sulge_m:
+        m.destroy()
+    else:
+        aken.destroy()
+    if v1.get() == 1:
+        subprocess.call(fail, shell=True)
+
+def salvestusaken():
+    universaalne_salvestusaken(False)
+
+def salvestus_valjumine():
+    universaalne_salvestusaken(True)
+
+
+def autorid():
+    uus = Toplevel(m)
+    uus.title("Autorid")
+    uus.geometry("600x30")
     uus.columnconfigure(0, weight=1)
     uus.columnconfigure(1, weight=1)
     uus.columnconfigure(2, weight=1)
-    nimi.grid(row=0, column=1)
-    nimi.config(font=("Arial", 20))
-    sisend = Entry(uus)
-    sisend.grid(row=1, column=1)
-    sisend.config(font=("Arial", 20))
-    salv = Button(uus, text="Salvesta", command= lambda: salvesta(sisend.get()))
-    salv.grid(row=2, column=1)
-    salv.config(font=("Arial", 20))
+    uus.resizable(False, False)
+    tekst = Label(uus, text="Käesoleva programmi autorid on Tormi Hunt ja Johannes Palmiste.")
+    tekst.grid(column=1)
+    tekst.config(font=("Arial", 15))
 
 #Peaakna loomine
 
@@ -88,8 +112,9 @@ m.resizable(True, True)
 
 #Nupu 'ennusta' loomine
 
-start = Button(m, text='Ennusta', width=25, height=5, command=ennusta)
-start.grid(row=6, column=0)
+start = Button(m, text='Ennusta', command=ennusta, width=15)
+start.grid(row=7, columnspan = 2)
+start.config(font=("Arial", 20))
 start.config(bg='red')
 
 #Hoiatuse loomine
@@ -106,19 +131,17 @@ filemenu = Menu(menuu)
 menuu.add_cascade(label="Tühjenda kõik väljad", command=tuhjenda)
 menuu.add_command(label="Salvesta", command=salvestusaken)
 helpmenu = Menu(menuu)
-menuu.add_cascade(label="Abi", menu=helpmenu)
-helpmenu.add_command(label='Kuidas see töötab?', command=Toplevel)
-helpmenu.add_command(label='Kuidas kasutada', command=Toplevel)
+menuu.add_cascade(label="Teave", menu=helpmenu)
+helpmenu.add_command(label='Autorid', command=autorid)
+helpmenu.add_command(label='Kuidas seda kasutada?', command=lambda: subprocess.call("Kasutusjuhend.pdf", shell = True))
 
 exitmenu = Menu(menuu)
 menuu.add_cascade(label="Väljumine", menu=exitmenu)
-exitmenu.add_command(label="Salvesta ja välju", command=m.quit)
+exitmenu.add_command(label="Salvesta ja välju", command=salvestus_valjumine)
 exitmenu.add_command(label='Välju salvestamata', command=m.quit)
 
-
-
-sildid = ["Elementide arv", "Ruumala", "Tihedus", "Atomaarne tihedus", "Energia aatomi kohta", "Tekkimisenergia \n aatomi kohta",
-          'energy above hull', 'efermi', 'total magnetization', 'Universaalne \n anisotroopia']
+sildid = ["Elementide arv (n)", "Ruumala  (Å3/rakk)", "Tihedus (g/cm3)", "Atomaarne tihedus", "Energia aatomi kohta", "Tekkimisenergia \n aatomi kohta \n (eV/aatom)",
+          'energy above hull \n (eV/aatom)', 'efermi', 'total magnetization', 'Universaalne \n anisotroopia']
 
 sisendid = []
 rida = 2
