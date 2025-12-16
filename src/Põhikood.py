@@ -64,7 +64,7 @@ def lahtesta():
 
 #Salvestusakna loomine
 
-def salvestusaken(v):
+def salvestusaken(v2):
     uus = Toplevel(m)
     v1 = IntVar()
     uus.title("Salvestamine")
@@ -75,23 +75,22 @@ def salvestusaken(v):
     Label(uus, text="Sisesta faili nimi laiendiga!", bg="orange", font=("Arial", 20)).grid(row=0, column=1)
     sisend = Entry(uus, font=("Arial", 20))
     sisend.grid(row=1, column=1)
-    Button(uus, text="Salvesta", font=("Arial", 20), command=lambda: salvesta_fail(sisend.get(), v1, uus, v)).grid(row=2, column=1)
+    Button(uus, text="Salvesta", font=("Arial", 20), command=lambda: salvesta_fail(sisend.get(), v1, uus, v2)).grid(row=2, column=1)
     Checkbutton(uus, text="Ava peale salvestamist", variable=v1, onvalue=1, offvalue=0).grid(row=3, column=1)
 
 #Sisendite ja tulemuse salvestamine tekstifaili. Funktsioon kirjutab teksitfaili sõna "Tühjus", kui sisendid pole korrektsed
 
-def salvesta_fail(fail, v1, aken, v):
+def salvesta_fail(fail, v1, aken, v2):
     try:
         with open(fail, "w", encoding="UTF-8") as vf:
-            vf.write(f"--Ennustatud keelutsooni laius: {round(ennusta(), 2)}--\n\n")
-
+            vf.write(f"--Ennustatud keelutsooni laius: {round(ennusta(), 2)} eV--\n\n")
             for i, sis in enumerate(sisendid):
                 v = list(sildid.keys())[i].split()
                 vf.write(f"{' '.join(v)} -- {sis.get()}\n\n")
     except:
         with open(fail, "w", encoding="UTF-8") as vf:
             vf.write("Tühjus")
-    if v:
+    if v2 :
         m.destroy()
     else:
         aken.destroy()
@@ -157,10 +156,10 @@ muutujad = []
 rida = 2
 veerg = 0
 
-sildid = {"Elementide arv (n)": (1, 6), "Ruumala  (Å3/rakk)": (1, 1400) , "Tihedus (g/cm3)": (0.5, 20), "Atomaarne tihedus": (1, 120), "Energia aatomi kohta \n (eV/aatom)": (-80, 0), "Tekkimisenergia \n aatomi kohta \n (eV/aatom)": (-1, 1) ,
-          'energy above hull \n (eV/aatom)': (0, 15), 'Fermi energia (eV)': (-10, 15), 'Täielik magneetumus ()': (0, 60), 'Universaalne \n anisotroopia': (-100, 100)}
+sildid = {"Number of elements (n)": (1, 6), "Volume (Å^3/cell)": (1, 1400) , "Density (g/cm3)": (0.5, 20), "Atomic density \n (atoms/cell)": (1, 120), "Energy per atom \n (eV/atom)": (-80, 0), "Formation energy \n per atom \n (eV/atom)": (-1, 1) ,
+          'Energy above hull \n (eV/atom)': (0, 15), 'Fermi energy (eV)': (-10, 15), 'Total magnetization \n (Bohr magneton)': (0, 60), 'Universal \n anisotropy': (-100, 100)}
 
-sammud = {"Elementide arv (n)": 1, "Ruumala  (Å3/rakk)": 10, "Tihedus (g/cm3)": 0.01, "Atomaarne tihedus": 1, "Energia aatomi kohta (eV/aatom)": 1, "Tekkimisenergia \n aatomi kohta \n (eV/aatom)": 0.01, "energy above hull \n (eV/aatom)": 0.1, "Fermi energia (eV)": 0.1, "total magnetization": 1, "Universaalne \n anisotroopia": 1}
+sammud = {"Number of elements (n)": 1, "Volume (Å^3/cell)": 10, "Density (g/cm3)": 0.01, "Atomic density \n (atoms/cell)": 1, "Energy per atom \n (eV/atom)": 1, "Formation energy \n per atom \n (eV/atom)": 0.01, "Energy above hull \n (eV/atom)": 0.1, "Fermi energy (eV)": 0.1, "Total magnetization \n (Bohr magneton)": 1, "Universal \n anisotropy": 1}
 
 for silt in sildid:
     if isinstance(sammud[silt], float):

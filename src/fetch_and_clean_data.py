@@ -47,11 +47,6 @@ dataFrame = dataFrame[(dataFrame['nelements'] > 0) & (dataFrame['nelements'] < 5
 dataFrame = dataFrame[(dataFrame['energy_per_atom'] < 0) & (dataFrame['energy_per_atom'] > -100)]
 dataFrame = dataFrame[(dataFrame['universal_anisotropy'] < 100) & (dataFrame['universal_anisotropy'] > -100)]
 
-#description = dataFrame.describe()
-#print(description)
-#dataFrame["volume"].hist()
-#plt.savefig('vloumePlot.png')
-
 #Standardises all values for machine learning. To standardize a dataset means to scale all of the values in the dataset such that the mean value is 0 and the standard deviation is 1.
 dataFrame_scaled = (dataFrame-dataFrame.mean())/dataFrame.std()
 #print(dataFrame_scaled)
