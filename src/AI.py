@@ -4,7 +4,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import joblib
 import pandas as pd
 
-df = pd.read_csv("data/standardised_data.csv")
+df = pd.read_csv("standardised_data.csv")
 
 #split training and testing data
 X = df.drop('band_gap', axis=1)
@@ -26,4 +26,4 @@ print(f'Accuracy mse: {100 - accuracy_mean * 100:.2f}%')
 print(f'Accuracy r2 {accuracy_r2 * 100:.2f}%')
 
 # save
-joblib.dump(regressor, "./data/band_gap_rf.joblib")
+joblib.dump(regressor, "band_gap_rf.joblib")
