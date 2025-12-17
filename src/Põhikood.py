@@ -156,10 +156,10 @@ muutujad = []
 rida = 2
 veerg = 0
 
-sildid = {"Number of elements (n)": (1, 6), "Volume (Å^3/cell)": (1, 1400) , "Density (g/cm3)": (0.5, 20), "Atomic density \n (atoms/cell)": (1, 120), "Energy per atom \n (eV/atom)": (-80, 0), "Formation energy \n per atom \n (eV/atom)": (-1, 1) ,
-          'Energy above hull \n (eV/atom)': (0, 15), 'Fermi energy (eV)': (-10, 15), 'Total magnetization \n (Bohr magneton)': (0, 60), 'Universal \n anisotropy': (-100, 100)}
+sildid = {"Number of elements \n (n)": (1, 6), "Volume (Å^3/cell)": (1, 1400) , "Density (g/cm3)": (0.5, 20), "Atomic density \n (atoms/cell)": (1, 120), "Energy per atom \n (eV/atom)": (-80, 0), "Formation energy \n per atom \n (eV/atom)": (-1, 1) ,
+          'Energy above hull \n (eV/atom)': (-1, 1), 'Fermi energy (eV)': (-10, 15), 'Total magnetization \n (Bohr magneton)': (0, 60), 'Universal \n anisotropy': (-100, 100)}
 
-sammud = {"Number of elements (n)": 1, "Volume (Å^3/cell)": 10, "Density (g/cm3)": 0.01, "Atomic density \n (atoms/cell)": 1, "Energy per atom \n (eV/atom)": 1, "Formation energy \n per atom \n (eV/atom)": 0.01, "Energy above hull \n (eV/atom)": 0.1, "Fermi energy (eV)": 0.1, "Total magnetization \n (Bohr magneton)": 1, "Universal \n anisotropy": 1}
+sammud = {"Number of elements \n (n)": 1, "Volume (Å^3/cell)": 10, "Density (g/cm3)": 0.01, "Atomic density \n (atoms/cell)": 1, "Energy per atom \n (eV/atom)": 1, "Formation energy \n per atom \n (eV/atom)": 0.01, "Energy above hull \n (eV/atom)": 0.01, "Fermi energy (eV)": 0.1, "Total magnetization \n (Bohr magneton)": 1, "Universal \n anisotropy": 1}
 
 for silt in sildid:
     if isinstance(sammud[silt], float):

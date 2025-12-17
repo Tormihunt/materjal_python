@@ -9,34 +9,17 @@ with MPRester("HEKWFDp0sGOgT9GPRHDQGdPfhEyLnqRL") as mpr:
     summary_docs = mpr.materials.summary.search(chunk_size=100,
                                                 fields = ["energy_above_hull", "formation_energy_per_atom", "nelements", "volume", "density", "density_atomic", "efermi", "total_magnetization", "nelements", "universal_anisotropy", "energy_per_atom", "band_gap"],
                                                 energy_above_hull=(-1, 1),
-                                                #band_gap=(3.0, 3.25))  # only stabile materials
                                                 )
 
-#print(summary_docs)    
 #converts to list and removes 'fields_not_requested'
 data = []
 for doc in summary_docs:
-    #print(f'this is doc: {doc}')
     listObj = doc.model_dump()
-    '''
-    #Also gets matrix from structure and removes structure'
-    matrix = listObj["structure"]["lattice"]["matrix"]
-    # Flatten it into 9 values: [m00, m01, m02, m10, m11, m12, m20, m21, m22]
-    flat_matrix = []
-    for i in matrix:
-        for j in i:
-            flat_matrix.append(j)
-    # Add each flattened value as its own key
-    for i, val in enumerate(flat_matrix):
-        listObj[f"matrix_{i}"] = val
-    listObj.pop('structure')
-    '''
     listObj.pop('fields_not_requested')
     data.append(listObj)
 
 #converts to dataframe
 dataFrame = pd.DataFrame(data)
-#print(f'this is dataFrame: {dataFrame}')
 
 #removes empty rows, duplicates and anomalous materials
 dataFrame = dataFrame.dropna()
@@ -49,10 +32,9 @@ dataFrame = dataFrame[(dataFrame['universal_anisotropy'] < 100) & (dataFrame['un
 
 #Standardises all values for machine learning. To standardize a dataset means to scale all of the values in the dataset such that the mean value is 0 and the standard deviation is 1.
 dataFrame_scaled = (dataFrame-dataFrame.mean())/dataFrame.std()
-#print(dataFrame_scaled)
 dataFrame_scaled.to_csv("standardised_data.csv", index=False)
 
-# --- Korrelatsioonide graafikud ---
+# Korrelatsioonide graafikud
 target = "band_gap"
 features = [col for col in dataFrame.columns if col != target]
 
